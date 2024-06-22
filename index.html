@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Chatbot Interface</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="container">
+      <h1>Chatbot Interface</h1>
+      <label for="bookSelect">Select a Book:</label>
+      <select id="bookSelect">
+        <option value="book1">Book 1</option>
+        <option value="book2">Book 2</option>
+      </select>
+      <br /><br />
+      <label for="questionInput">Ask a Question:</label>
+      <input type="text" id="questionInput" />
+      <button onclick="askQuestion()">Ask</button>
+      <br /><br />
+      <div id="answerDisplay"></div>
+    </div>
+
+    <script>
+      function askQuestion() {
+        const book = document.getElementById("bookSelect").value;
+        const question = document.getElementById("questionInput").value;
+
+        fetch("http://127.0.0.1:5000/ask", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ book: book, question: question }),
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            document.getElementById("answerDisplay").innerHTML = `
+                    <p><strong>Book:</strong> ${data.book}</p>
+                    <p><strong>Question:</strong> ${data.question}</p>
+                    <p><strong>Answer:</strong> ${data.answer}</p>
+                `;
+          })
+          .catch((error) => {
+            console.error("Error:", error);
+          });
+      }
+    </script>
+  </body>
+</html>
